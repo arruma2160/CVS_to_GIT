@@ -29,7 +29,7 @@
 
 function help ()
 {
-    echo 
+    echo  -e "\033[1;32m"
     echo  " [ *] Usage: ./gitter.sh -s <CVS_repo_sr> -d <GIT_repo_dest> [-h|-i <init_mod>]"
     echo  " "
     echo  " -s <CVS_repo_src>:   location of the CVS repository with all CVS modules of that repo"
@@ -41,7 +41,7 @@ function help ()
     echo  " ./gitter.sh -h"
     echo  " ./gitter.sh -s ~/CVS_repo -d ~/GIT_repo "
     echo  " ./gitter.sh -s ~/CVS_repo -d ~/GIT_repo -i A"
-    echo
+    echo -e "\033[0m"
 }
 
 
@@ -73,7 +73,7 @@ done
 
 # Verification of arguments
 if [ ! "${SRC}" ] || [ ! "${DST}" ]; then
-    echo "[ !! *] ERROR: arguments not provided"
+    echo -e "\n\033[1;31m[ !! *] ERROR: arguments not provided\033[0m"
     help
     exit 1
 fi
