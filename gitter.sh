@@ -83,9 +83,9 @@ if [ ! "${SRC}" ] || [ ! "${DST}" ]; then
     exit 1
 fi
 if [ ! -d ${SRC} ] || [ ! -d ${DST} ]; then 
-    echo "[ !! *] Make sure both:"
+    echo -e "\033[1;31m[ !! *] Make sure both:"
     echo " - ${SRC}  and"
-    echo " - ${DST}  exists"
+    echo -e " - ${DST}  exists\033[0m"
     exit 1
 else
     echo "[ * ] Source directory: ${SRC}"
@@ -100,15 +100,17 @@ if [ "${DST: -1}" == "/" ]; then
     DST=${DST::-1}
 fi
 
-echo "[ * ] Source directory: ${SRC}"
-echo "[ * ] Dest directory:   ${DST}"
-
-
-
 # 2. Go accross the CVS modules all / requested (initial letter) 
 if [ ! "${INITIAL}" ]; then
-    ls -d ${SRC}/*
+    MODULES=$(ls -d ${SRC}/*)
 else
-    ls -d ${SRC}/${INITIAL}*
+    MODULES=$(ls -d ${SRC}/${INITIAL}*)
 fi
+
+while read -r name; do
+    NAME_CVS=$(echo ${name} | rev | cut -d/ -f1 | rev)
+    NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )
+    GIT_NEW_REPO="${DST}/${NAME_GIT}"
+    echo "git repo at: $GIT_NEW_REPO"
+done <<<  "$MODULES"
 
