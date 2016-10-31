@@ -113,6 +113,6 @@ while read -r name; do
     NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )           # Creation of git repo name - substitution of " " for "_"
     GIT_NEW_REPO="${DST}/${NAME_GIT}"                    # Path + name for git repo
     ## CVS -> GIT
-    echo "[DEBUG * ] git cvsimport -C ${GIT_NEW_REPO} -v -d ${SRC} -o origin ${NAME_CVS}"
+    git cvsimport -C ${GIT_NEW_REPO} -v -d ${SRC} -o origin ${NAME_CVS}
 done <<<  "$MODULES"
 
