@@ -19,6 +19,10 @@
 #  -h:                  displays help.
 #  -i <init_mod>:       initial of the module names to be converted
 #
+#  [ *] Dependencies:
+#       ----------------------------------------------
+#  git cvsimport
+#
 #  [ *] Examples of use:
 #       ----------------------------------------------
 #  ./gitter.sh -h
@@ -86,3 +90,15 @@ else
     echo "[ * ] Source directory: ${SRC}"
     echo "[ * ] Dest directory:   ${SRC}"
 fi
+
+# Strip last '/' in case the arguments passed to the program have them 
+# TODO
+
+# 2. Go accross the CVS modules all / requested (initial letter) 
+if [ ! "${INT}" ]; then
+    MODULES=`echo ${SRC}/${INT}*`
+else
+    MODULES=`echo ${SRC}/*`
+fi
+
+echo "[DEBUG ] MODULES: \n ${MODULES}" 
