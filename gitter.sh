@@ -61,7 +61,7 @@ if [ ${NUMARGS} -eq 0 ]; then
 fi
 
 # Option arguments parsing
-while getopts ":s:d:ih" opt; do
+while getopts "s:d:i:h" opt; do
     case ${opt} in
        h)  help
            exit 0
@@ -70,7 +70,7 @@ while getopts ":s:d:ih" opt; do
            ;;
        d) DST=${OPTARG}
            ;;
-       i) INT=${OPTARG}
+       i) INITIAL=${OPTARG}
            ;;
    esac
 done
@@ -88,17 +88,16 @@ if [ ! -d ${SRC} ] || [ ! -d ${DST} ]; then
     exit 1
 else
     echo "[ * ] Source directory: ${SRC}"
-    echo "[ * ] Dest directory:   ${SRC}"
+    echo "[ * ] Dest directory:   ${DST}"
 fi
 
 # Strip last '/' in case the arguments passed to the program have them 
 # TODO
 
 # 2. Go accross the CVS modules all / requested (initial letter) 
-if [ ! "${INT}" ]; then
-    MODULES=`echo ${SRC}/${INT}*`
+if [ ! "${INITIAL}" ]; then
+    ls -d ${SRC}/*
 else
-    MODULES=`echo ${SRC}/*`
+    ls -d ${SRC}/${INITIAL}*
 fi
 
-echo "[DEBUG ] MODULES: \n ${MODULES}" 
