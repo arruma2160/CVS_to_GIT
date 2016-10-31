@@ -108,9 +108,11 @@ else
 fi
 
 while read -r name; do
-    NAME_CVS=$(echo ${name} | rev | cut -d/ -f1 | rev)
-    NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )
-    GIT_NEW_REPO="${DST}/${NAME_GIT}"
-    echo "git repo at: $GIT_NEW_REPO"
+    ## Git repo location
+    NAME_CVS=$(echo ${name} | rev | cut -d/ -f1 | rev)   # CVS module name
+    NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )           # Creation of git repo name - substitution of " " for "_"
+    GIT_NEW_REPO="${DST}/${NAME_GIT}"                    # Path + name for git repo
+    ## CVS -> GIT
+    echo "[DEBUG * ] git cvsimport -C ${GIT_NEW_REPO} -v -d ${SRC} -o origin ${NAME_CVS}"
 done <<<  "$MODULES"
 
