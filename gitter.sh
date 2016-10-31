@@ -21,6 +21,7 @@
 #
 #  [ *] Dependencies:
 #       ----------------------------------------------
+#  POSIX shell - bash 4.2
 #  git cvsimport
 #
 #  [ *] Examples of use:
@@ -92,7 +93,17 @@ else
 fi
 
 # Strip last '/' in case the arguments passed to the program have them 
-# TODO
+if [ "${SRC: -1}" == "/" ]; then
+    SRC=${SRC::-1}
+fi
+if [ "${DST: -1}" == "/" ]; then
+    DST=${DST::-1}
+fi
+
+echo "[ * ] Source directory: ${SRC}"
+echo "[ * ] Dest directory:   ${DST}"
+
+
 
 # 2. Go accross the CVS modules all / requested (initial letter) 
 if [ ! "${INITIAL}" ]; then
