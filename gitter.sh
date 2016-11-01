@@ -1,6 +1,7 @@
 #! /bin/bash
 
 ###############################################################################################################
+#
 #  [ *] Script bash to convert CVS repository modules into Git repositories 
 #       keeping the history of the repository in them. It needs at least two arguments to be passed:
 #           - source argument pointing to the CVS repository containing all modules,
@@ -29,9 +30,16 @@
 #  ./gitter.sh -h
 #  ./gitter.sh -s ~/CVS_repo -d ~/GIT_repo 
 #  ./gitter.sh -s ~/CVS_repo -d ~/GIT_repo -i A
+#
 ##############################################################################################################
 
 
+###
+#  @ name:  help
+#  @ desc:  display small banner with instructions about the usage of 'gitter.sh'
+#  @ args:  none
+#  @ use:   help
+###
 function help ()
 {
     echo  -e "\033[1;32m"
@@ -50,7 +58,28 @@ function help ()
 }
 
 
+###
+#  @ name:  logger
+#  @ desc:  logging function to log messages about cvs modules converted into git repos
+#  @ args:  1 -> name of file to log into; 2 -> message to log; 3 -> CVS module to log about
+#  @ use:   logger <file_name> <message> <CVS module>
+###
+function logger () 
+{
+   local NUMARGS=$#
+   if [ ${NUMARGS} -eq 3 ];then
+       if [ "$1" ] && [ "$2" ]; then
+           echo "[ * ] $2 - module $3" >> $1
+       fi
+   else
+       echo "[ **** ] Wrong use of logger function"
+   fi
+}
+
+
 ## MAIN ##
+
+LOG_FILE=$(date +"%d%m%y%H%M%S").log
 
 # 1. Getting arguments passed from the command line
 
@@ -107,12 +136,20 @@ else
     MODULES=$(ls -d ${SRC}/${INITIAL}*)
 fi
 
+# conversion of cvs modules into git repos
 while read -r name; do
     ## Git repo location
     NAME_CVS=$(echo ${name} | rev | cut -d/ -f1 | rev)   # CVS module name
     NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )           # Creation of git repo name - substitution of " " for "_"
-    GIT_NEW_REPO="${DST}/${NAME_GIT}"                    # Path + name for git repo
+    GIT_REPO="${DST}/${NAME_GIT}"                        # Path + name for git repo
+
     ## CVS -> GIT
-    git cvsimport -C ${GIT_NEW_REPO} -v -d ${SRC} -o origin ${NAME_CVS}
+    git cvsimport -C ${GIT_REPO} -v -d ${SRC} -o origin ${NAME_CVS}
+    # Logging 
+    if [ "$?" -eq "0" ]; then
+        logger ${LOG_FILE} "OK ..." ${NAME_CVS} 
+    else
+        logger ${LOG_FILE} "PROBLEM ..." ${NAME_CVS} 
+    fi
 done <<<  "$MODULES"
 
