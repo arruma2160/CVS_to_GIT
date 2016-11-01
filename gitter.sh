@@ -80,6 +80,7 @@ function logger ()
 ## MAIN ##
 
 LOG_FILE=$(date +"%d%m%y%H%M%S").log
+ALL_OUTPUT=$(date +"%d%m%y%H%M%S").output
 
 # 1. Getting arguments passed from the command line
 
@@ -139,17 +140,18 @@ fi
 # conversion of cvs modules into git repos
 while read -r name; do
     ## Git repo location
-    NAME_CVS=$(echo ${name} | rev | cut -d/ -f1 | rev)   # CVS module name
+    NAME_CVS="$(echo ${name} | rev | cut -d/ -f1 | rev)" # CVS module name
     NAME_GIT=$(echo ${NAME_CVS} | tr " " "_" )           # Creation of git repo name - substitution of " " for "_"
     GIT_REPO="${DST}/${NAME_GIT}"                        # Path + name for git repo
 
     ## CVS -> GIT
-    git cvsimport -C ${GIT_REPO} -v -d ${SRC} -o origin ${NAME_CVS}
+    logger ${LOG_FILE} "MODULE NAME: " ${NAME_CVS}
+    git cvsimport -C ${GIT_REPO} -v -d ${SRC} -o origin "${NAME_CVS}"
     # Logging 
     if [ "$?" -eq "0" ]; then
-        logger ${LOG_FILE} "OK ..." ${NAME_CVS} 
+        logger ${LOG_FILE} "OK ..." "${NAME_CVS}" 
     else
-        logger ${LOG_FILE} "PROBLEM ..." ${NAME_CVS} 
+        logger ${LOG_FILE} "PROBLEM ..." "${NAME_CVS}"
     fi
 done <<<  "$MODULES"
 
